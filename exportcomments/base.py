@@ -29,10 +29,6 @@ class ModelEndpointSet(object):
             url += '?' + urlencode(query_string)
         return url
 
-    def create_url(self, query_string=None):
-        url = '{}/export'.format(self.base_url)
-        return self._add_action_or_query_string(url, None, query_string)
-
     def get_list_url(self, action=None, query_string=None):
         url = '{}/exports/me'.format(self.base_url)
         return self._add_action_or_query_string(url, action, query_string)

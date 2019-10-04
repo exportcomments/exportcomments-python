@@ -44,7 +44,7 @@ class Export(ModelEndpointSet):
                                       'replies': replies,
                                       'twitterType': twitterType
                                       })
-        url = self.create_url(data)
+        url = self.get_detail_url(data)
         response = self.make_request('POST', url, retry_if_throttled=retry_if_throttled)
         return ExportCommentsResponse(response)
 
