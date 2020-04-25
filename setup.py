@@ -10,14 +10,14 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 setup(
     name='exportcomments',
-    version='1.0.0',
+    version='1.0.1',
     author='ExportComments',
     author_email='sales@exportcomments.com',
     description='Official Python client for the ExportComments API',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/exportcomments/exportcomments-python',
-    download_url='https://github.com/exportcomments/exportcomments-python/tarball/v1.0.0',
+    download_url='https://github.com/exportcomments/exportcomments-python/tarball/v1.0.1',
     keywords=['exportcomments', 'export social media comments', 'python'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

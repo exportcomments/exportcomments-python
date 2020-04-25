@@ -29,9 +29,9 @@ class Export(ModelEndpointSet):
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
         return ExportCommentsResponse(response)
 
-    def check(self, uniqueId, retry_if_throttled=True):
+    def check(self, guid, retry_if_throttled=True):
         data = self.remove_none_value({
-                                      'uniqueId': uniqueId
+                                      'guid': guid
                                       })
         url = self.get_detail_url(data)
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
@@ -45,7 +45,7 @@ class Export(ModelEndpointSet):
                                       'twitterType': twitterType
                                       })
         url = self.get_detail_url(data)
-        response = self.make_request('POST', url, retry_if_throttled=retry_if_throttled)
+        response = self.make_request('PUT', url, retry_if_throttled=retry_if_throttled)
         return ExportCommentsResponse(response)
 
     
