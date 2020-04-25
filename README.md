@@ -1,11 +1,8 @@
 # ExportComments API for Python
 
-Official Python client for the [ExportComments API](https://exportcomments.com/api/). Build and run machine learning models for language processing from your Python apps.
+Official Python client for the [ExportComments API](https://exportcomments.com/api). Build and run machine learning models for language processing from your Python apps.
 
-
-Installation
----------------
-
+## Installation
 
 You can use pip to install the library:
 
@@ -19,10 +16,7 @@ Alternatively, you can just clone the repository and run the setup.py script:
 $ python setup.py install
 ```
 
-
-Usage
-------
-
+## Usage
 
 Before making requests to the API, you need to create an instance of the ExportComments client. You will have to use your [account API Key](https://exportcomments.com/pricing):
 
@@ -41,7 +35,7 @@ From the ExportComments client instance, you can call any endpoint:
 
 ```python
 response = ex.exports.check(
-    uniqueId='dfd6a2f2-5579-421f-96ac-98993d0edea1'
+    guid='dfd6a2f2-5579-421f-96ac-98993d0edea1'
 )
 
 ```
@@ -52,25 +46,33 @@ The response object returned by every endpoint call is a `ExportCommentsResponse
 
 ```python
 print(response.body)
-# =>  [
-# =>    {
-# =>      "url": "https://www.instagram.com/p/1234567",
-# =>      "datecreated": "2016-08-26T07:32:09+00:00",
-# =>      "uniqueId": "dfd6a2f2-5579-421f-96ac-98993d0edea1",
-# =>      "done": true,
-# =>      "dateexported": "2016-08-26T07:32:27+00:00",
-# =>      "error": null,
-# =>      "total": 306,
-# =>      "totalExported": 306,
-# =>      "replies": true,
-# =>      "dateNotified": null,
-# =>      "repliesCount": 0,
-# =>      "downloadUrl": "/exports/comments5d638af93ab70-1234567.xlsx",
-# =>      "rawUrl": "/exports/6dbf1a87e0fb1f7f16b25be55bb37647-148d4d42-9db8-4e5a-9b51-a860e3646cb0.json"
-# =>    }
-# =>  ]
-```
 
+# =>  {
+# =>      "code": 200,
+# =>      "success": true,
+# =>      "data": {
+# =>          "url": "https://www.instagram.com/p/1234567",
+# =>          "guid": "2cfb0b9d-7633-4341-a702-cb889fe549eb",
+# =>          "status": "queueing",
+# =>          "replies": false,
+# =>          "fileName": "comments5ea4b4d5a7602-1325511884314646.xlsx",
+# =>          "fileNameRAW": "08b735760a5a40eb1fd70ca16e97aed3-2e0916fe-de86-4422-8449-fb608cbe5221.json",
+# =>          "total": 0,
+# =>          "totalExported": 0,
+# =>          "retry": 0,
+# =>          "error": null,
+# =>          "repliesCount": 0,
+# =>          "twitterType": null,
+# =>          "timezone": "UTC",
+# =>          "createdAt": "2016-08-26T07:32:09+00:00",
+# =>          "updatedAt": "2016-08-26T07:32:09+00:00",
+# =>          "exportedAt": "",
+# =>          "downloadUrl": "/exports/comments5ea4b4d5a7602-1325511884314646.xlsx",
+# =>          "rawUrl": "/exports/08b735760a5a40eb1fd70ca16e97aed3-2e0916fe-de86-4422-8449-fb608cbe5221.json"
+# =>      },
+# =>      "message": null
+# =>  }
+```
 
 ## Create export
 
@@ -80,22 +82,6 @@ response = ex.export.create(
 )
 
 ```
-
-### Responses
-
-The response object returned by every endpoint call is a `ExportCommentsResponse` object. The `body` attribute has the parsed response from the API:
-
-```python
-print(response.body)
-# =>    {
-# =>        "uniqueId": "dfd6a2f2-5579-421f-96ac-98993d0edea1",
-# =>        "date_created": "2016-08-26T07:32:09+00:00",
-# =>        "status": false,
-# =>        "error": null
-# =>    }
-
-```
-
 
 ### Errors
 
@@ -116,12 +102,11 @@ except ExportCommentsException:
 
 Available exceptions:
 
-| class                       | Description |
-|-----------------------------|-------------|
-| `ExportCommentsException`      | Base class for every exception below.                                  |
+| class                       | Description                                                                                         |
+| --------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ExportCommentsException`   | Base class for every exception below.                                                               |
 | `RequestParamsError`        | An invalid parameter was sent. Check the exception message or response object for more information. |
-| `AuthenticationError`       | Authentication failed, usually because an invalid token was provided. Check the exception message. |
-| `ForbiddenError`            | You don't have permissions to perform the action on the given resource. |
-| `PlanRateLimitError`        | You have sent too many requests in the last minute.|
-| `ConcurrencyRateLimitError` | You have sent too many requests in the last second. |
-
+| `AuthenticationError`       | Authentication failed, usually because an invalid token was provided. Check the exception message.  |
+| `ForbiddenError`            | You don't have permissions to perform the action on the given resource.                             |
+| `PlanRateLimitError`        | You have sent too many requests in the last minute.                                                 |
+| `ConcurrencyRateLimitError` | You have sent too many requests in the last second.                                                 |
