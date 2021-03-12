@@ -38,11 +38,12 @@ class Export(ModelEndpointSet):
         return ExportCommentsResponse(response)
 
    
-    def create(self, url, replies='false', twitterType=None, retry_if_throttled=True):
+    def create(self, url, replies='false', twitterType=None, options=None, retry_if_throttled=True):
         data = self.remove_none_value({
                                       'url': url,
                                       'replies': replies,
-                                      'twitterType': twitterType
+                                      'twitterType': twitterType,
+                                      'options': options
                                       })
         url = self.get_detail_url(data)
         response = self.make_request('PUT', url, retry_if_throttled=retry_if_throttled)
