@@ -77,7 +77,7 @@ print(response.body)
 ## Create export
 
 ```python
-response = ex.export.create(
+response = ex.exports.create(
     url='https://www.instagram.com/p/1234567', replies='false', twitterType=None
 )
 
@@ -91,7 +91,7 @@ Endpoint calls may raise exceptions. Here is an example on how to handle them:
 from exportcomments.exceptions import PlanQueryLimitError, ExportCommentsException
 
 try:
-    response = ex.export.create(url='https://www.instagram.com/p/1234567', replies='false', twitterType=None)
+    response = ex.exports.create(url='https://www.instagram.com/p/1234567', replies='false', twitterType=None)
 except PlanQueryLimitError as e:
     # No monthly queries left
     # e.response contains the ExportCommentsResponse object
