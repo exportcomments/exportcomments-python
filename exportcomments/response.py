@@ -42,7 +42,7 @@ class ExportCommentsResponse(object):
         return [r for r in self if r.status_code != requests.codes.ok and r.status_code != requests.codes.created]
 
     def successful_raw_responses(self):
-        return [r for r in self if r.status_code == requests.codes.ok and r.status_code == requests.codes.created]
+        return [r for r in self if r.status_code == requests.codes.ok or r.status_code == requests.codes.created]
 
     def __iter__(self):
         for r in self.raw_responses:
