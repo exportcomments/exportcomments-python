@@ -66,7 +66,11 @@ class ExportCommentsResponse(object):
                                               error_code=body.get('error_code'))
         exception_kwargs = dict(
                                 status_code=raw_response.status_code,
-                                detail=body.get('detail', 'Internal server error'),
+                                # The API reports errors under "error" (and sometimes
+                                # "message"); only fall back to the generic text when
+                                # the body carries none of them.
+                                detail=body.get('detail') or body.get('error') or body.get('message')
+                                    or 'Internal server error',
                                 error_code=body.get('error_code'),
                                 response=self,
                                 )
