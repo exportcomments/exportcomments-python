@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-from exportcomments.settings import DEFAULT_BASE_URL
+from exportcomments.settings import DEFAULT_BASE_URL, installed_version
 from exportcomments.export import Export
 
 import requests
-import pkg_resources
 
-try:
-    _version = pkg_resources.get_distribution('exportcomments').version
-except Exception:
-    _version = 'noversion'
+_version = installed_version()
 
 
 class ExportComments(object):

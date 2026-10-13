@@ -14,6 +14,22 @@ class LocalParamValidationError(ExportCommentsLocalException):
     pass
 
 
+class EmptyExportError(ExportCommentsLocalException):
+    """The job finished with 0 results, so the API produced no file to download.
+
+    Raised by ``download()`` / ``download_json()`` instead of a confusing 404
+    on the file URL. ``result_note`` carries the API's explanation (private /
+    login-gated content, comments disabled, filters too narrow, ...).
+    """
+
+    def __init__(self, guid, result_note=None):
+        self.guid = guid
+        self.result_note = result_note
+        super(EmptyExportError, self).__init__(
+            'Job {} finished with 0 results; no file was produced. {}'.format(
+                guid, result_note or '').strip())
+
+
 class ExportCommentsResponseException(ExportCommentsException):
     def __init__(self, status_code=500, detail='Internal server error',
                  error_code=None, response=None):

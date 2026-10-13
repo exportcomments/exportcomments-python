@@ -5,16 +5,14 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from exportcomments.settings import DEFAULT_BASE_URL
 import json
-import pkg_resources
 import requests
 import six
 from six.moves.urllib.parse import urlencode
 import time
 
-try:
-    version = pkg_resources.get_distribution('exportcomments').version
-except Exception:
-    version = 'noversion'
+from exportcomments.settings import installed_version
+
+version = installed_version()
 
 
 class ModelEndpointSet(object):
@@ -39,6 +37,13 @@ class ModelEndpointSet(object):
 
     def get_create_url(self):
         return '{}/job'.format(self.base_url)
+
+    def get_batch_url(self, batch_id=None):
+        # Bulk export lives under /api/v1 (same token, same auth header).
+        url = '{}/batch-export'.format(self.base_url.replace('/v3', '/v1'))
+        if batch_id is not None:
+            url += '/{}'.format(batch_id)
+        return url
 
     def make_request(self, method, url, data=None, retry_if_throttled=True, params=None):
         if data is not None:

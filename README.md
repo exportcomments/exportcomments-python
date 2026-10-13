@@ -51,7 +51,56 @@ guid = response.body['guid']
 ```python
 response = ex.jobs.check(guid=guid)
 status = response.body['status']  # 'queueing', 'progress', 'done', or 'error'
+
+# Or block until the job is finished (polls every 10s, 1h timeout by default)
+job = ex.jobs.wait(guid)
 ```
+
+### Bulk Export (many URLs in one call)
+
+Premium and Business plans can submit a list of URLs at once. The server queues
+them and runs them at your plan's concurrency; every URL becomes a regular job.
+
+```python
+response = ex.jobs.create_batch(
+    urls=[
+        'https://www.instagram.com/p/AAAAAAA/',
+        'https://www.instagram.com/p/BBBBBBB/',
+    ],
+    options={'replies': True},
+)
+batch_id = response.body['batchId']
+guids = response.body['guids']        # one per accepted URL
+rejected = response.body['errors']    # URLs the server did not accept
+
+status = ex.jobs.wait_batch(batch_id)   # or ex.jobs.check_batch(batch_id).body
+for job in status['exports']:
+    print(job['url'], job['status'], job['total'])
+```
+
+Limits: Business tokens may hold up to 100 queued URLs and send 5 batch
+submissions per 10 minutes (Premium: 25 queued, 5 per 30 minutes). Only
+accepted submissions count toward the window.
+
+### Exports with 0 results
+
+When the source returns nothing for a URL (private or login-gated content,
+comments disabled, filters too narrow), the job finishes as `done` with
+`total: 0`. **No file is produced in that case** — `download_url` / `json_url`
+are `null` and `result_note` explains why. `download()` and `download_json()`
+raise `EmptyExportError` instead of failing on a dead link:
+
+```python
+from exportcomments.exceptions import EmptyExportError
+
+try:
+    ex.jobs.download(guid)
+except EmptyExportError as e:
+    print(e.result_note)
+```
+
+For login-gated content, run the export with your own session cookies
+(Advanced Mode, see *Job Options* below).
 
 ### List Jobs
 
@@ -136,6 +185,7 @@ except ExportCommentsException as e:
 | `ForbiddenError`             | Insufficient permissions for the requested action.                                         |
 | `PlanRateLimitError`         | Too many requests per minute according to your plan's limits.                              |
 | `ConcurrencyRateLimitError`  | Too many requests per second.                                                              |
+| `EmptyExportError`           | The job finished with 0 results, so there is no file to download (`result_note` says why). |
 
 ## Complete Example
 
@@ -183,6 +233,15 @@ print(f"Downloaded: {file_path}")
 data = ex.jobs.download_json(guid=guid)
 print(f"Got {len(data)} comments")
 ```
+
+## Changelog
+
+**2.2.0**
+
+- Bulk exports: `create_batch()`, `check_batch()`, `wait_batch()` (`POST /api/v1/batch-export`)
+- `wait(guid)` polls a job until it is finished
+- `EmptyExportError` for jobs that finished with 0 results (no file exists); reads the API's `result_note`
+- Error messages surface the API's `error` text instead of a generic "Internal server error"
 
 ## API v3 Changes
 
